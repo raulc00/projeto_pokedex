@@ -1,0 +1,136 @@
+const fetchPokemon = () => {
+
+    const url = 'https://pokeapi.co/api/v2/pokemon/1';
+
+    fetch(url) 
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            console.log(data);
+        });
+};
+
+fetchPokemon();
+
+
+// esse API do fetch é usado para coletar informações de um url específico. Nesse caso, ele inicia fazendo o fetch da url do pokemon especifico, ao ser coletado a informação, usamos a .then para continuar o processo, na qual ele pega a resposta obtida e retorna o json que veio junto com essa resposta. Depois disso, ele faz um .then da data recebida do return do json, na qual é feita um console.log dessa data, printando no console.
+
+===========================================================
+
+const fetchPokemon = () => {
+
+    const url = 'https://pokeapi.co/api/v2/pokemon/1';
+
+    fetch(url) 
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            console.log(data);
+            const pokemon = {}
+            pokemon['name'] = data.name;
+            pokemon['id'] = data.id;
+            pokemon['image'] = data.sprites.other.dream_world['front_default'];
+            console.log(pokemon);
+
+        });
+};
+
+fetchPokemon();
+
+
+//Após ser feita a coleta dos dados, será feita a representação delas no console.log. Nesse caso, é feita uma constante pokemon que vai receber um array de dados (representado por {}), na qual após isso, devemos especificar que dados vão ser colocados nas posições da array na constante pokemon. Nesse caso, é utilizado o 'name' que recebe o data.name, id e assim por diante. No fim, é feito um console.log(pokemon) para mostrar os dados coletados.
+
+========================================================
+
+const fetchPokemon = () => {
+
+    const url = 'https://pokeapi.co/api/v2/pokemon/1';
+
+    fetch(url) 
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            console.log(data);
+            const pokemon = {}
+            pokemon['name'] = data.name;
+            pokemon['id'] = data.id;
+            pokemon['image'] = data.sprites.other.dream_world['front_default'];
+            pokemon['type'] = '';
+            data.types.forEach((type) =>{
+
+                pokemon['type'] = pokemon['type'] + ' ,' + type.type.name;
+            })
+            console.log(pokemon);
+
+        });
+};
+
+fetchPokemon();
+
+
+//Por os types serem colocados em um array, é necessário fazer um método diferente pra que seja colocado na constante pokemon. Para isso, é feito um forEach (é um for) de type na qual o type de pokemon faz uma concatenação entre o type que tem atualmente, uma virgula e o type novo do array.
+
+==================================================
+
+const fetchPokemon = () => {
+
+    const url = 'https://pokeapi.co/api/v2/pokemon/1';
+
+    fetch(url) 
+        .then(res => {
+            return res.json();
+        })
+        .then(data => {
+            console.log(data);
+            const pokemon = {}
+            pokemon['name'] = data.name;
+            pokemon['id'] = data.id;
+            pokemon['image'] = data.sprites.other.dream_world['front_default'];
+            pokemon['type'] = data.types.map( (type) => type.type.name).join(', ');
+            console.log(pokemon);
+
+        });
+};
+
+fetchPokemon();
+
+
+//Nessa outra forma, é feito o uso do .map, na qual ele faz uma array nova baseado nos dados fornecidos. Nesse caso, ele forma uma array dos nomes de type.type.name e junta eles com um join, fazendo a separação pela ,
+
+========================================================
+
+const fetchPokemon = () => {
+
+    const promises = [];
+
+    for(let i = 1; i <= 151; i++){
+
+        const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
+        promises.push(fetch(url).then( (res) => res.json()));
+
+    }
+
+    Promise.all(promises).then( (results) => {
+
+        const pokemon = results.map((data) => ({
+
+            name: data.name,
+            id: data.id,
+            imagem: data.sprites.other.dream_world['front_default'],
+            type: data.types.map((type) => type.type.name).join(', ')
+        }));
+
+        console.log(pokemon);
+    }); 
+
+        
+};
+
+fetchPokemon();
+
+
+
+
