@@ -1,3 +1,7 @@
+const pokedex = document.getElementById("pokedex");
+
+console.log(pokedex);
+
 const fetchPokemon = () => {
 
     const promises = [];
@@ -19,12 +23,30 @@ const fetchPokemon = () => {
             type: data.types.map((type) => type.type.name).join(', ')
         }));
 
-        console.log(pokemon);
+        displayPokemon(pokemon);
     }); 
 
         
 };
 
+const displayPokemon = (pokemon) => {
+
+    console.log(pokemon);
+    const pokemonHTMLString = pokemon.map( pokemon_id => `
+    
+    <li class = "card">
+        <img class = "card_img" src= "${pokemon_id.imagem}"/>
+        <h2 class = "card_title">${pokemon_id.id}. ${pokemon_id.name} </h2>
+        <p class = "card_subtitle">Type: ${pokemon_id.type} </p>
+    </li>
+    
+    `).join('');
+
+    pokedex.innerHTML = pokemonHTMLString;
+}
+
 fetchPokemon();
+
+
 
 

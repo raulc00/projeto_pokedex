@@ -132,5 +132,75 @@ const fetchPokemon = () => {
 fetchPokemon();
 
 
+//Para otimizar o tempo que leva para serem coletadas todas as informações dos pokemon desejados, é feito um for, na qual passa o indice atual para url pelo ${i}. Após ser feito isso, ele faz um push no vetor de promisses para ser feito o processo do fetch que passará os dados do json recebidos. Ao fim do for, é feito o Promisse.all e depois um then para iniciar a transferência dos dados para a constante pokemon.
+
+promisse.all -> coloca todas em uma fila na qual são processados em paralelo entre eles
 
 
+============================================
+
+const pokedex = document.getElementById("pokedex");
+
+console.log(pokedex);
+
+const fetchPokemon = () => {
+
+    const promises = [];
+
+    for(let i = 1; i <= 151; i++){
+
+        const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
+        promises.push(fetch(url).then( (res) => res.json()));
+
+    }
+
+    Promise.all(promises).then( (results) => {
+
+        const pokemon = results.map((data) => ({
+
+            name: data.name,
+            id: data.id,
+            imagem: data.sprites.other.dream_world['front_default'],
+            type: data.types.map((type) => type.type.name).join(', ')
+        }));
+
+        displayPokemon(pokemon);
+    }); 
+
+        
+};
+
+const displayPokemon = (pokemon) => {
+
+    console.log(pokemon);
+    const pokemonHTMLString = pokemon.map( pokemon_id => `
+    
+    <li class = "card">
+        <img class = "card_img" src= "${pokemon_id.imagem}"/>
+        <h2 class = "card_title">${pokemon_id.id}. ${pokemon_id.name} </h2>
+        <p class = "card_subtitle">Type: ${pokemon_id.type} </p>
+    </li>
+    
+    `).join('');
+
+    pokedex.innerHTML = pokemonHTMLString;
+}
+
+fetchPokemon();
+
+//Para ser feito o display dos pokemon na tela, foi feito a criação de uma constante chamada displayPokemon, na qual recebe a constante pokemon como parâmetro. Dentro dela, é criado uma constante chamada pokemonHTMLString, na qual recebe o .map de pokemon, sendo identificado por pokemon_id, na qual é feita uma li formada por imagem, h2 e p. Nesse caso, o map vai fazer com que seja feita uma nova array de li, usando a array de pokemon como base para a sua criação. No fim, ela passa por um join(''), para transformar esses arrays novos em string.
+
+
+
+#pokedex {
+
+    padding-inline-start: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-gap: 20px;
+}
+
+grid-template-columns -> determina como deve está dividido as colunas em uma grid
+grid-gap -> determina a distância entre as colunas de uma grid
+
+height -> usado para reduzir tamanho da imagem
